@@ -3,6 +3,8 @@ import os
 import socket
 import subprocess
 
+from base64 import b64encode
+
 from pathlib import Path
 
 logger = logging.getLogger()
@@ -67,11 +69,11 @@ class SlurmSnapInstanceManager(Object):
                     f"Slurm component not supported: {self.snap_mode}",
                     exc_info=True
             )
-    
+
     @property
     def _hostname(self):
         return socket.gethostname().split(".")[0]
- 
+
     def set_snap_mode(self):
         """Set the snap mode, thorw an exception if it fails.
         """
@@ -91,7 +93,7 @@ class SlurmSnapInstanceManager(Object):
     def install(self):
         self._install_snap()
         self._snap_connect()
-   
+
     def _snap_connect(self, slot=None):
         connect_commands = [
             ["snap", "connect", "slurm:network-control"],
@@ -129,6 +131,11 @@ class SlurmSnapInstanceManager(Object):
                 f"Could not install the slurm snap using the command: {e}", exc_info=True
             )
 
+    def write_munge_key(self, munge_key):
+        munge = b64decode(munge_key.encode())
+        f = open("/var/snap/slurm/common/etc/munge/munge.key", "wb")
+        f.write(munge)
+
     def write_config(self, context):
 
         ctxt = {}
@@ -147,3 +154,4 @@ class SlurmSnapInstanceManager(Object):
             target.unlink()
 
         target.write_text(source.read_text().format(**ctxt))
+
