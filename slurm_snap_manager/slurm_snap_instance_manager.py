@@ -67,10 +67,10 @@ class SlurmSnapInstanceManager(Object):
         # Set the template and config file paths based on the snap.mode.
         # Throw an exception if initialized with an unsupported snap.mode.
         if self.snap_mode == "slurmdbd":
-            self.slurm_config_yaml = SLURM_CONFIGURATOR_TEMPLATES_DIR / 'slurmdbd.yaml'
+            self.slurm_config_yaml = self.SLURM_CONFIGURATOR_TEMPLATES_DIR / 'slurmdbd.yaml'
             self.slurm_config_template = self.TEMPLATE_DIR / 'slurmdbd.yaml.tmpl'
         elif self.snap_mode in ["slurmd", "slurmrestd", "slurmctld"]:
-            self.slurm_config_yaml = SLURM_CONFIGURATOR_TEMPLATES_DIR / 'slurm.yaml'
+            self.slurm_config_yaml = self.SLURM_CONFIGURATOR_TEMPLATES_DIR / 'slurm.yaml'
             self.slurm_config_template = self.TEMPLATE_DIR / 'slurm.yaml.tmpl'
         else:
             self.logger.error(
