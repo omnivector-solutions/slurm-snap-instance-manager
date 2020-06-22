@@ -47,7 +47,7 @@ class SlurmSnapInstanceManager(Object):
     on = SlurmSnapInstanceManagerEvents()
 
     _stored = StoredState()
-
+    MUNGE_KEY_PATH = Path("/var/snap/slurm/common/etc/munge/munge.key")
 
     def __init__(self, charm, key):
         super().__init__(charm, key)
@@ -133,8 +133,8 @@ class SlurmSnapInstanceManager(Object):
 
     def write_munge_key(self, munge_key):
         munge = b64decode(munge_key.encode())
-        f = open("/var/snap/slurm/common/etc/munge/munge.key", "wb")
-        f.write(munge)
+        self.MUNGE_KEY_PATH.writebytes(munge)
+
 
     def write_config(self, context):
 
