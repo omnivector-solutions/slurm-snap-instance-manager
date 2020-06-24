@@ -40,6 +40,8 @@ class SlurmSnapInstanceManagerEvents(ObjectEvents):
     slurm_config_changed = EventSource(SlurmConfigChangedEvent)
 
 
+logger = logging.getLogger()
+
 class SlurmSnapInstanceManager(Object):
     """
     responsible for installing the slurm_snap, connecting to network, and
@@ -50,7 +52,6 @@ class SlurmSnapInstanceManager(Object):
 
     on = SlurmSnapInstanceManagerEvents()
 
-    logger = logging.getLogger()
 
     MUNGE_KEY_PATH = Path("/var/snap/slurm/common/etc/munge/munge.key")
     SLURM_CONFIGURATOR_TEMPLATES_DIR = Path(
@@ -73,9 +74,9 @@ class SlurmSnapInstanceManager(Object):
             self.slurm_config_yaml = self.SLURM_CONFIGURATOR_TEMPLATES_DIR / 'slurm.yaml'
             self.slurm_config_template = self.TEMPLATE_DIR / 'slurm.yaml.tmpl'
         else:
-            self.logger.error(
-                f"Slurm component not supported: {self.snap_mode}",
-                exc_info=True
+            logger.error(
+                f"Slurm component not supported: {self.snap_mode}"
+          
             )
 
     @property
@@ -93,9 +94,8 @@ class SlurmSnapInstanceManager(Object):
                 f"snap.mode={self.snap_mode}",
             ])
         except subprocess.CalledProcessError as e:
-            self.logger.error(
-               f"Setting the snap.mode failed. snap.mode={self.snap_mode} - {e}",
-                exc_info=True
+            logger.error(
+               f"Setting the snap.mode failed. snap.mode={self.snap_mode} - {e}"
             )
 
     def install(self):
@@ -115,9 +115,9 @@ class SlurmSnapInstanceManager(Object):
             try:
                 subprocess.call(connect_command)
             except subprocess.CalledProcessError as e:
-                self.logger.error(
-                    f"Could not connect snap interface: {e}",
-                    exc_info=True,
+                logger.error(
+                    f"Could not connect snap interface: {e}"
+                    
                 )
 
 
@@ -142,8 +142,7 @@ class SlurmSnapInstanceManager(Object):
             subprocess.call(snap_install_cmd)
         except subprocess.CalledProcessError as e:
             logger.error(
-                f"Could not install the slurm snap using the command: {e}",
-                exc_info=True
+                f"Could not install the slurm snap using the command: {e}"
             )
 
     def write_munge_key(self, munge_key):
