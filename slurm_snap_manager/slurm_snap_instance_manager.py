@@ -157,7 +157,7 @@ class SlurmSnapInstanceManager(Object):
         target = self.slurm_config_yaml
 
         if not type(context) == dict:
-            self.framework.set_unit_status(
+            self.fw_adapter.set_unit_status(
                 MaintenanceStatus("context not of type dict")
             )
             return
@@ -165,7 +165,7 @@ class SlurmSnapInstanceManager(Object):
             ctxt = {**{"hostname": self._hostname}, **context}
         if not source.exists():
            # raise Exception(f"Source config {source} does not exist - Please debug.")
-            self.framework.set_unit_status(MaintenanceStatus("source doesn't exist"))
+            self.fw_adapter.set_unit_status(MaintenanceStatus("source doesn't exist"))
         if target.exists():
             target.unlink()
 
